@@ -2,6 +2,7 @@ import json
 import os
 import re
 from colorama import Fore, Style, init
+from tabulate import tabulate
 
 # Initialize colorama
 init()
@@ -39,21 +40,6 @@ def load_pokemon_data(pokemon_id):
 def normalize_location(location):
     return re.sub(r'\s*\(.*?\)', '', location).strip()
 
-def display_pokemon_details(pokemon, location):
-    header = f"{pokemon['name']} - {pokemon['id']}"
-    location_type = location['type']
-    rarity = location['rarity']
-    min_level = location['min_level']
-    max_level = location['max_level']
-    held_items = ', '.join(item['name'] for item in pokemon['held_items'])
-    condition = location['location'].split('(', 1)[-1].rstrip(')') if '(' in location['location'] else ''
-
-    print(f"\n{Fore.GREEN}{'='*40}{Style.RESET_ALL}")
-    print(f"{Fore.YELLOW}{header.center(40)}{Style.RESET_ALL}")
-    print(f"{Fore.GREEN}{'='*40}{Style.RESET_ALL}")
-    print(f"{location_type} | {rarity} | {min_level}-{max_level} | {held_items} | {condition}")
-    print()
-
 def main():
     locations = load_locations()
     
@@ -66,7 +52,6 @@ def main():
     selected_region = regions[region_choice]
 
     print(f"\nLocations in {selected_region}:")
-
     locs = locations[selected_region]
     normalized_locs = list(set(normalize_location(loc) for loc in locs))
     normalized_locs.sort()
@@ -91,9 +76,23 @@ def main():
     # Sort encounters by rarity using the custom order
     encounters.sort(key=lambda x: rarity_order.index(x[1]["rarity"]))
 
-    # Display sorted encounters
+    # Prepare data for table
+    table_data = []
     for pokemon, location in encounters:
-        display_pokemon_details(pokemon, location)
+        row = [
+            pokemon['name'],
+            pokemon['id'],
+            location['type'],
+            location['rarity'],
+            f"{location['min_level']} - {location['max_level']}",
+            ', '.join(item['name'] for item in pokemon['held_items']),
+            location['location'].split('(', 1)[-1].rstrip(')') if '(' in location['location'] else ''
+        ]
+        table_data.append(row)
+
+    # Print the table
+    headers = ["Nom", "ID", "Location type", "Rarity", "Minlvl - Maxlvl", "Held Item", "Day Time/Season"]
+    print("\n" + tabulate(table_data, headers=headers, tablefmt="grid"))
 
 if __name__ == "__main__":
     main()
