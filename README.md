@@ -1,4 +1,4 @@
-# Dex-Helper-CLI
+# PokeMMO-NoMoLostShinies
 A pokedex/shiny hunting helper in python for CLI
 
 # Prerequisites
