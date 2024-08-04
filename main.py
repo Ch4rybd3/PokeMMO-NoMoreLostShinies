@@ -39,22 +39,23 @@ def normalize_location(location):
 
 def get_recommendations(risky_moves, boring_abilities, risky_items, recommendation_data):
     recs = []
-    print(f"Risky Moves: {risky_moves}")
     for move in risky_moves:
         move_name = move.split(' (')[0].lower()  # Extract move name before checking
-        print(f"Checking move: {move_name}")
         if move_name in recommendation_data["risk_moves"]:
             recs.append(recommendation_data["risk_moves"][move_name])
-    print(f"Boring Abilities: {boring_abilities}")
+    
     for ability in boring_abilities:
         if ability.lower() in recommendation_data["boring_abilities"]:
             recs.append(recommendation_data["boring_abilities"][ability.lower()])
-    print(f"Risky Items: {risky_items}")
+    
     for item in risky_items:
         if item.lower() in recommendation_data["risky_items"]:
             recs.append(recommendation_data["risky_items"][item.lower()])
-    print(f"Recommendations: {recs}")
+    
     return '; '.join(recs) if recs else '-'
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def main():
     locations = load_locations()
@@ -84,6 +85,11 @@ def main():
     location_choice = int(input("\nEnter location number: ")) - 1
     selected_location = normalized_locs[location_choice]
 
+    # Clear terminal before displaying the table
+    clear_terminal()
+    
+    print(f"Selected Region: {selected_region}")
+    print(f"Selected Location: {selected_location}")
     print(f"\nPokémon in {selected_location}:")
 
     encounters = []
