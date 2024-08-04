@@ -16,12 +16,17 @@ Once you have clone the repository and downloaded the prerequisite (or pip insta
 python main.py
 ```
 
-You will have to select the region youi  will be shiny hunting, then the area.
+You will have to select the region you will be shiny hunting in, then the area.
+![Alt text](assets/selection.png)
+
+![Alt text](assets/table.png)
 The table will show you every revelant data concerning the pokemons you will be able to encounter such as held items, lvl, type, rarity, ... as seen in the dex, like a reverse dex where you search by location instead of Pokemons.
 
 But the true value is in the 4 last columns as they will indicate what risky moves, items or boring abilities the mon can have, based on his dex data.
 
 The last column contains recommendations for every scenarios so you can get prepared and not risk a lost shiny that you didn't expected or didn't prepared well enough for.
+It used the "recommendation.json" file to give custom countermeasure
+![Alt text](assets/recommendations.png)
 
 # Tips
 I advise you to zoom out a bit on the terminal, so the table have enough space to be rendered properly, I'm going to work a bit on that later, or keep the change for the V2
