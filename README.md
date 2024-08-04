@@ -17,6 +17,7 @@ python main.py
 ```
 
 You will have to select the region you will be shiny hunting in, then the area.
+
 ![Alt text](assets/selection.png)
 
 ![Alt text](assets/table.png)
