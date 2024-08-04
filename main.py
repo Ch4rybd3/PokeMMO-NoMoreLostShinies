@@ -28,6 +28,9 @@ region_order = [
     "Unova"
 ]
 
+# Define risky moves
+risky_moves = ["selfdestruct", "take down"]
+
 def load_locations():
     with open("locations.json", 'r') as file:
         return json.load(file)
@@ -79,6 +82,7 @@ def main():
     # Prepare data for table
     table_data = []
     for pokemon, location in encounters:
+        risky_move_list = [move['name'] for move in pokemon['moves'] if 'level' in move and move['name'].lower() in risky_moves and location['min_level'] >= move['level']]
         row = [
             pokemon['name'],
             pokemon['id'],
@@ -86,12 +90,13 @@ def main():
             location['rarity'],
             f"{location['min_level']} - {location['max_level']}",
             ', '.join(item['name'] for item in pokemon['held_items']),
-            location['location'].split('(', 1)[-1].rstrip(')') if '(' in location['location'] else ''
+            location['location'].split('(', 1)[-1].rstrip(')') if '(' in location['location'] else '',
+            ', '.join(risky_move_list) if risky_move_list else 'None'
         ]
         table_data.append(row)
 
     # Print the table
-    headers = ["Nom", "ID", "Location type", "Rarity", "Minlvl - Maxlvl", "Held Item", "Day Time/Season"]
+    headers = ["Nom", "ID", "Location type", "Rarity", "Minlvl - Maxlvl", "Held Item", "Day Time/Season", "Risk Move"]
     print("\n" + tabulate(table_data, headers=headers, tablefmt="grid"))
 
 if __name__ == "__main__":
