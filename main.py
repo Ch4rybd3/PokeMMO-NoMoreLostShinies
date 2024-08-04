@@ -38,21 +38,27 @@ def normalize_location(location):
     return re.sub(r'\s*\(.*?\)', '', location).strip()
 
 def get_recommendations(risky_moves, boring_abilities, risky_items, recommendation_data):
-    recs = []
-    for move in risky_moves:
-        move_name = move.split(' (')[0].lower()  # Extract move name before checking
-        if move_name in recommendation_data["risk_moves"]:
-            recs.append(recommendation_data["risk_moves"][move_name])
-    
-    for ability in boring_abilities:
-        if ability.lower() in recommendation_data["boring_abilities"]:
-            recs.append(recommendation_data["boring_abilities"][ability.lower()])
-    
-    for item in risky_items:
-        if item.lower() in recommendation_data["risky_items"]:
-            recs.append(recommendation_data["risky_items"][item.lower()])
-    
-    return '; '.join(recs) if recs else '-'
+    recommendations = []
+
+    if risky_moves:
+        move_recommendations = [recommendation_data["risk_moves"].get(move.split(' (')[0].lower(), None) for move in risky_moves]
+        move_recommendations = [rec for rec in move_recommendations if rec]  # Filter out None
+        if move_recommendations:
+            recommendations.append('\n'.join(move_recommendations))
+
+    if boring_abilities:
+        ability_recommendations = [recommendation_data["boring_abilities"].get(ability.lower(), None) for ability in boring_abilities]
+        ability_recommendations = [rec for rec in ability_recommendations if rec]  # Filter out None
+        if ability_recommendations:
+            recommendations.append('\n'.join(ability_recommendations))
+
+    if risky_items:
+        item_recommendations = [recommendation_data["risky_items"].get(item.lower(), None) for item in risky_items]
+        item_recommendations = [rec for rec in item_recommendations if rec]  # Filter out None
+        if item_recommendations:
+            recommendations.append('\n'.join(item_recommendations))
+
+    return '\n'.join(recommendations) if recommendations else '-'
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
