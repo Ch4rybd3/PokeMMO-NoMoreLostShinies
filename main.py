@@ -17,21 +17,6 @@ region_order = [
     "Kanto", "Johto", "Hoenn", "Sinnoh", "Unova"
 ]
 
-# Define risky moves
-risky_moves = [
-    "selfdestruct", "take down", "follow me", "rage powder", "trick", "transform", "memento", "perish song", "sketch", "curse", "grudge", "teleport", "destiny bond", "trash", "outrage", "final gambit", "double edge", "brave bird", "soak", "roar", "whirlwind", "ally switch", "petal dance", "teeter dance"
-]
-
-# Define boring abilities
-boring_abilities = [
-    "intimidate", "trace", "reactive gaze", "arena trap", "shadow tag", "forewarn", "illusion", "unnerve", "mold breaker"
-]
-
-# Define risky items
-risky_items = [
-    "iron barbs", "black sludge", "toxic orb", "life orb", "flame orb"
-]
-
 def load_locations():
     with open("locations.json", 'r') as file:
         return json.load(file)
@@ -41,11 +26,44 @@ def load_pokemon_data(pokemon_id):
     with open(filepath, 'r') as file:
         return json.load(file)
 
+def load_list(filename):
+    with open(filename, 'r') as file:
+        return json.load(file)
+
+def load_recommendations():
+    with open("recommendation.json", 'r') as file:
+        return json.load(file)
+
 def normalize_location(location):
     return re.sub(r'\s*\(.*?\)', '', location).strip()
 
+def get_recommendations(risky_moves, boring_abilities, risky_items, recommendation_data):
+    recs = []
+    print(f"Risky Moves: {risky_moves}")
+    for move in risky_moves:
+        move_name = move.split(' (')[0].lower()  # Extract move name before checking
+        print(f"Checking move: {move_name}")
+        if move_name in recommendation_data["risk_moves"]:
+            recs.append(recommendation_data["risk_moves"][move_name])
+    print(f"Boring Abilities: {boring_abilities}")
+    for ability in boring_abilities:
+        if ability.lower() in recommendation_data["boring_abilities"]:
+            recs.append(recommendation_data["boring_abilities"][ability.lower()])
+    print(f"Risky Items: {risky_items}")
+    for item in risky_items:
+        if item.lower() in recommendation_data["risky_items"]:
+            recs.append(recommendation_data["risky_items"][item.lower()])
+    print(f"Recommendations: {recs}")
+    return '; '.join(recs) if recs else '-'
+
 def main():
     locations = load_locations()
+    recommendation_data = load_recommendations()
+
+    # Load lists from JSON files
+    risky_moves = load_list("risky_moves.json")
+    boring_abilities = load_list("boring_abilities.json")
+    risky_items = load_list("risky_items.json")
     
     print("Select a region:")
     regions = [region for region in region_order if region in locations]
@@ -101,6 +119,8 @@ def main():
             if item['name'].lower() in risky_items
         ]
 
+        recommendations = get_recommendations(risky_move_list, boring_ability_list, risky_item_list, recommendation_data)
+
         row = [
             pokemon['name'],
             pokemon['id'],
@@ -111,12 +131,13 @@ def main():
             location['location'].split('(', 1)[-1].rstrip(')') if '(' in location['location'] else '',
             ', '.join(risky_move_list) if risky_move_list else '-',
             ', '.join(boring_ability_list) if boring_ability_list else '-',
-            ', '.join(risky_item_list) if risky_item_list else '-'
+            ', '.join(risky_item_list) if risky_item_list else '-',
+            recommendations
         ]
         table_data.append(row)
 
     # Print the table
-    headers = ["Nom", "ID", "Location type", "Rarity", "Minlvl - Maxlvl", "Held Item", "Day Time/Season", "Risk Move", "Boring Abilities", "Risky Items"]
+    headers = ["Nom", "ID", "Location type", "Rarity", "Minlvl - Maxlvl", "Held Item", "Day Time/Season", "Risk Move", "Boring Abilities", "Risky Items", "Recommendations"]
     print("\n" + tabulate(table_data, headers=headers, tablefmt="grid"))
 
 if __name__ == "__main__":
