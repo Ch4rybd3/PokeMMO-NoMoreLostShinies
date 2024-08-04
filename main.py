@@ -29,7 +29,12 @@ region_order = [
 ]
 
 # Define risky moves
-risky_moves = ["selfdestruct", "take down"]
+risky_moves = [
+    "selfdestruct", "take down", "follow me", "rage powder", "trick", 
+    "transform", "memento", "perish song", "sketch", "curse", 
+    "grudge", "teleport", "destiny bond", "trash", "outrage", 
+    "final gambit", "double edge", "brave bird", "soak"
+]
 
 def load_locations():
     with open("locations.json", 'r') as file:
@@ -82,7 +87,12 @@ def main():
     # Prepare data for table
     table_data = []
     for pokemon, location in encounters:
-        risky_move_list = [move['name'] for move in pokemon['moves'] if 'level' in move and move['name'].lower() in risky_moves and location['min_level'] >= move['level']]
+        # Collect risky moves based on max_level
+        risky_move_list = [
+            move['name'] for move in pokemon['moves']
+            if 'level' in move and move['name'].lower() in risky_moves and location['max_level'] >= move['level']
+        ]
+
         row = [
             pokemon['name'],
             pokemon['id'],
