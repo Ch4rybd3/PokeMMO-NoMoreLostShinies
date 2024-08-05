@@ -8,7 +8,7 @@ A pokedex/shiny hunting helper in python for CLI
 For the non-tech people, here's a simplified version : 
 You need python, for that, you can just download the latest version from the Microsoft Store which is the version 3.12 at the following link : https://www.microsoft.com/store/productId/9NCVDN91XZQP?ocid=pdpshare
 
-Then, you just have to navigate to the folder in which you have downloaded the code, right click>show more options>Open in terminal
+Then, you just have to navigate to the folder in which you have downloaded the code, right click->show more options->Open in terminal
 Then you just have to copy paste the following command : 
 You can just go and use :
 ```
