@@ -63,6 +63,12 @@ def get_recommendations(risky_moves, boring_abilities, risky_items, recommendati
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def get_current_moveset(pokemon_moves, max_level):
+    """Return the last 4 moves learned by the Pokémon up to max_level."""
+    level_moves = [move for move in pokemon_moves if 'level' in move and move['level'] <= max_level]
+    level_moves.sort(key=lambda move: move['level'], reverse=True)
+    return level_moves[:4]
+
 def main():
     locations = load_locations()
     recommendation_data = load_recommendations()
@@ -113,12 +119,23 @@ def main():
     # Prepare data for table
     table_data = []
     for pokemon, location in encounters:
+        max_level = location['max_level']
+        min_level = location['min_level']
+
+        # Get the current moveset for the Pokémon
+        current_moveset = get_current_moveset(pokemon['moves'], max_level)
+
         # Collect risky moves based on max_level with level info
-        risky_move_list = [
-            f"{move['name']} ({move['level']})" for move in pokemon['moves']
-            if 'level' in move and move['name'].lower() in risky_moves and location['max_level'] >= move['level']
-        ]
-        
+        risky_move_list = []
+        for move in pokemon['moves']:
+            if 'level' in move and move['name'].lower() in risky_moves:
+                if max_level >= move['level']:
+                    if move not in current_moveset:
+                        # If the move is not in the current moveset, color it violet
+                        risky_move_list.append(f"{Fore.MAGENTA}{move['name']} ({move['level']}){Style.RESET_ALL}")
+                    else:
+                        risky_move_list.append(f"{move['name']} ({move['level']})")
+
         # Collect boring abilities
         boring_ability_list = [
             ability['name'].lower() for ability in pokemon['abilities']
