@@ -1,8 +1,9 @@
 {
     "risk_moves": {
         "selfdestruct": "Damp Quagsire or Parasect",
+        "explosion": "Damp Quagsire or Parasect",
         "take down": "Magic Guard + Skill Swap Sigilyph or ghost type or heal pulse",
-        "double edge": "Magic Guard + Skill Swap Sigilyph or ghost type or heal pulse",
+        "double-edge": "Magic Guard + Skill Swap Sigilyph or ghost type or heal pulse",
         "submission": "Magic Guard + Skill Swap Sigilyph or ghost type or heal pulse",
         "head charge": "Magic Guard + Skill Swap Sigilyph or ghost type or heal pulse",
         "brave bird": "Magic Guard + Skill Swap Sigilyph or heal pulse",
